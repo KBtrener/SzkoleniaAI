@@ -1,1 +1,623 @@
+"use client";
 
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
+import { 
+  CheckCircle2, 
+  Target, 
+  Sparkles,
+  FileText,
+  Lightbulb,
+  Calendar,
+  Wrench
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { base44 } from '@/api/base44Client';
+
+export default function Home() {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '', rodoConsent: false });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error('Proszę wypełnić wszystkie pola');
+      return;
+    }
+
+    if (!formData.rodoConsent) {
+      toast.error('Proszę zaakceptować politykę prywatności');
+      return;
+    }
+
+    // Walidacja e-maila
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Podaj poprawny adres e-mail');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await base44.integrations.Core.SendEmail({
+        to: 'info@kbtrener.pl',
+        subject: `Konsultacja AI - zapytanie od ${formData.name}`,
+        body: `Imię: ${formData.name}\nE-mail: ${formData.email}\n\nWiadomość:\n${formData.message}`
+      });
+
+      toast.success('Dziękuję za wiadomość! Odezwę się wkrótce.');
+      setFormData({ name: '', email: '', message: '', rodoConsent: false });
+    } catch (error) {
+      console.error('Błąd wysyłania:', error);
+      toast.error('Błąd przy wysyłaniu wiadomości. Spróbuj ponownie lub napisz bezpośrednio na info@kbtrener.pl');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+
+  return (
+    <div className="bg-white">
+      {/* PRE-HEADER */}
+      <div className="bg-gradient-to-r from-[#575761] via-[#648381] to-[#575761] border-b border-slate-700">
+        <div className="container mx-auto px-6 py-3 text-center">
+          <p className="text-sm text-white font-medium">
+            Konsultacje AI 1:1 dla jednoosobowych firm pracujących z klientami
+          </p>
+        </div>
+      </div>
+
+      {/* HERO SECTION */}
+      <section 
+        id="hero"
+        className="relative py-20 lg:py-28 overflow-hidden bg-gradient-to-br from-[#D8D2E1] via-white to-[#D8D2E1]"
+      >
+        <div className="container mx-auto px-6 lg:px-12 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#575761] mb-6 leading-tight tracking-tight">
+              Praca na swoim nie musi być taka skomplikowana.<br />
+              AI może zdjąć z Ciebie część roboty.
+            </h1>
+
+            <p className="text-lg md:text-xl text-[#575761]/80 mb-8 leading-relaxed max-w-3xl mx-auto">
+              Pomagam jednoosobowym firmom ogarnąć codzienne sprawy<br />
+              i wykorzystać AI tam, gdzie naprawdę ma sens.
+            </p>
+
+            <Button 
+              size="lg"
+              onClick={() => scrollToSection('kontakt')}
+              className="bg-[#DD614A] text-white hover:brightness-95 px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+            >
+              Umów konsultację
+            </Button>
+            
+            <p className="text-sm text-[#575761]/70 mt-4">
+              Bez kursów, bez presji, bez technicznego żargonu.
+            </p>
+          </div>
+        </div>
+
+        {/* Decorative elements */}
+        <div className="absolute top-20 right-10 w-96 h-96 bg-[#DD614A] rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse" />
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-[#648381] rounded-full mix-blend-multiply filter blur-3xl opacity-35 animate-pulse" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#FFBF46] rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
+      </section>
+
+      {/* CO OTRZYMASZ SECTION */}
+      <motion.section 
+        className="py-20 bg-gradient-to-b from-white to-[#D8D2E1]/40"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#575761] mb-4">
+              Co dostajesz po konsultacji
+            </h2>
+            <p className="text-lg text-[#575761]/80 max-w-3xl mx-auto">
+              3–4 godziny pracy 1:1, po których masz jasność, prosty plan i konkretne zastosowania AI w Twojej codziennej pracy.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            variants={staggerContainer}
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+          >
+            {[
+              {
+                icon: Target,
+                title: 'Wiesz dokładnie, gdzie AI realnie oszczędza Ci czas',
+                desc: 'Koniec z testowaniem wszystkiego — masz jasną selekcję opartą na Twojej rzeczywistej pracy.'
+              },
+              {
+                icon: Calendar,
+                title: 'Masz prosty schemat: kiedy i po co korzystać z AI',
+                desc: 'Przestajesz błądzić i losowo eksperymentować. Zyskujesz klarowność.'
+              },
+              {
+                icon: FileText,
+                title: 'Odzyskujesz spokój w głowie i kontrolę nad pracą',
+                desc: 'Bez chaosu, bez przeciążenia, bez technicznego stresu.'
+              },
+              {
+                icon: Lightbulb,
+                title: 'Plan działania na kolejne 30 dni',
+                desc: 'To nie jest inspiracja. To konkretna zmiana sposobu pracy — od razu.'
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+              >
+                <Card className="h-full border-none shadow-md hover:shadow-xl transition-all bg-white">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-14 h-14 bg-[#D8D2E1] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <item.icon className="w-7 h-7 text-[#648381]" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-[#575761] mb-2">{item.title}</h3>
+                    <p className="text-[#575761]/80 text-sm leading-relaxed">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+
+
+      {/* AI W MAŁEJ FIRMIE SECTION */}
+      <motion.section 
+        className="py-20 bg-gradient-to-br from-[#575761] via-[#648381] to-[#575761] text-white"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Co zmienia się po konsultacji
+            </h2>
+            <p className="text-lg text-white/80 max-w-3xl mx-auto">
+              Po 3–4 godzinach pracy 1:1 dostajesz prosty sposób działania, który możesz zacząć stosować od razu:
+            </p>
+          </motion.div>
+
+          <motion.div 
+            variants={staggerContainer}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12"
+          >
+            {[
+              {
+                icon: Target,
+                title: 'Diagnoza Twojej codziennej pracy',
+                desc: 'Analizujemy, co się powtarza, co zabiera energię i gdzie pojawia się chaos decyzyjny'
+              },
+              {
+                icon: Lightbulb,
+                title: 'Selekcja: gdzie AI ma sens (a gdzie nie)',
+                desc: 'Tworzymy prostą mapę — przestajesz błądzić i testować losowo'
+              },
+              {
+                icon: Wrench,
+                title: 'Prosty sposób pracy z AI',
+                desc: 'Najprostszy możliwy układ: 2–3 stałe zastosowania AI, bez technicznego żargonu'
+              },
+              {
+                icon: Calendar,
+                title: 'Plan wdrożenia na 30 dni',
+                desc: 'Jasna lista działań i kolejność wdrożeń — wychodzisz z planem do samodzielnej realizacji'
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+              >
+                <Card className="h-full border-none shadow-lg hover:shadow-2xl transition-all bg-white/95 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 bg-[#DD614A] rounded-xl flex items-center justify-center mb-4 shadow-md">
+                      <item.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-[#575761] mb-2">{item.title}</h3>
+                    <p className="text-[#575761]/80 text-sm leading-relaxed">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div variants={fadeInUp} className="text-center">
+            <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 max-w-2xl mx-auto border border-white/30">
+              <p className="text-xl font-bold text-white">
+                To system, który ma działać w codziennej pracy — nie w teorii.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* DLA KOGO SECTION */}
+      <motion.section 
+        className="py-20 bg-gradient-to-b from-white to-[#D8D2E1]/40"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#575761] mb-6 text-center">
+              Dla kogo jest ta konsultacja
+            </h2>
+            <p className="text-lg text-[#575761]/80 mb-8 text-center">
+              Najlepiej sprawdzi się, jeśli pracujesz 1:1 z klientami i:
+            </p>
+            
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
+              {[
+                'Prowadzisz jednoosobową działalność',
+                'Nie masz zespołu ani działu IT',
+                'Chcesz pracować mądrzej, a nie więcej'
+              ].map((item, index) => (
+                <div key={index} className="flex items-center gap-3 p-4 bg-gradient-to-br from-white to-[#D8D2E1]/40 rounded-xl shadow-md hover:shadow-lg transition-all border border-[#D8D2E1]">
+                  <CheckCircle2 className="w-5 h-5 text-[#648381] flex-shrink-0" />
+                  <span className="text-[#575761] font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-lg text-[#575761]/80 mb-6 text-center">
+              Ten typ konsultacji najlepiej pasuje do osób takich jak:
+            </p>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+              {[
+                'Trenerzy personalni',
+                'Fizjoterapeuci i terapeuci manualni',
+                'Masażyści',
+                'Hipnoterapeuci i coachowie',
+                'Dietetycy',
+                'Inni freelancerzy usługowi'
+              ].map((item, index) => (
+                <div key={index} className="flex items-center gap-3 p-4 bg-gradient-to-br from-white to-[#D8D2E1]/40 rounded-xl shadow-md hover:shadow-lg transition-all border border-[#D8D2E1]">
+                  <CheckCircle2 className="w-5 h-5 text-[#648381] flex-shrink-0" />
+                  <span className="text-[#575761] font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+
+
+
+            <div className="mt-10 text-center">
+              <Button 
+                size="lg"
+                onClick={() => scrollToSection('kontakt')}
+                className="bg-[#DD614A] text-white hover:brightness-95 px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+              >
+                Umów konsultację
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* DLACZEGO TA KONSULTACJA DZIAŁA SECTION */}
+      <motion.section 
+        className="py-20 bg-gradient-to-br from-[#575761] via-[#648381] to-[#575761] text-white"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Dlaczego to działa
+            </h2>
+          </motion.div>
+
+          <motion.div 
+            variants={staggerContainer}
+            className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+          >
+            {[
+              'Pracujemy na Twoich realnych zadaniach, nie przykładach',
+              'Dostajesz proste zasady i konkretne zastosowania, zamiast listy narzędzi',
+              'Znam realia jednoosobowych firm — sam w nich pracuję od ponad 15 lat',
+              'Wszystko jest proste, możliwe do wdrożenia i bez stresu'
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+              >
+                <div className="flex items-start gap-4 p-6 bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl shadow-lg border border-white/20 hover:border-[#DD614A]/70 transition-all">
+                  <CheckCircle2 className="w-6 h-6 text-[#DD614A] flex-shrink-0 mt-1" />
+                  <p className="text-slate-100 leading-relaxed">{item}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* KIM JESTEM SECTION */}
+      <motion.section 
+        className="pt-20 pb-10 bg-gradient-to-b from-white to-[#D8D2E1]/40"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#575761] mb-4">
+              Kim jestem i jak pracuję
+            </h2>
+          </motion.div>
+
+          <motion.div variants={fadeInUp} className="max-w-5xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              <div className="w-full md:w-auto flex justify-center md:justify-start flex-shrink-0">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69397f58f952de77afa2732a/b3b71d4e6_DSCF9080.jpg"
+                  alt="Karol Bilecki"
+                  className="w-56 h-56 md:w-72 md:h-72 rounded-2xl object-cover shadow-xl border border-[#D8D2E1]"
+                />
+              </div>
+              
+              <div className="flex-1 space-y-5">
+                <p className="text-base text-[#575761] leading-relaxed">
+                  Nazywam się <strong>Karol Bilecki</strong>.<br />
+                  Od ponad 15 lat pracuję na własny rachunek i prowadzę jednoosobowe działalności.
+                </p>
+                
+                <p className="text-base text-[#575761] leading-relaxed">
+                  Przez te lata nauczyłem się, jak wygląda codzienność JDG bez zespołu i zaplecza.<br />
+                  Wszystko przechodzi przez jedną osobę: kontakt z klientami, sprzedaż, marketing, organizacja pracy i finanse.
+                </p>
+                
+                <p className="text-base text-[#575761] leading-relaxed">
+                  AI pojawiło się w momencie, gdy realnie zaczęło zdejmować część tych ról z głowy.<br />
+                  Dziś używam go jak praktycznego wsparcia w codziennej pracy — do pisania, planowania, analizowania i porządkowania spraw.
+                </p>
+                
+                <p className="text-base text-[#575761] leading-relaxed">
+                  Na konsultacjach dzielę się tym doświadczeniem.<br />
+                  Pokazuję, jak wykorzystać AI w jednoosobowej firmie, żeby uprościć pracę albo zastąpić zadania, które normalnie wymagałyby innych specjalistów.
+                </p>
+                
+                <p className="text-base text-[#575761] leading-relaxed font-semibold">
+                  Nie musisz znać technologii ani narzędzi.<br />
+                  Wystarczy, że chcesz pracować prościej i spokojniej.
+                </p>
+                
+                <div className="bg-gradient-to-br from-[#D8D2E1]/60 to-white rounded-xl p-6 shadow-lg border border-[#D8D2E1]">
+                  <p className="text-sm text-[#575761] leading-relaxed">
+                    <strong>Na konsultacjach:</strong><br />
+                    • dzielę się praktycznym doświadczeniem pracy na JDG<br />
+                    • pokazuję sensowne zastosowania AI w codziennych zadaniach<br />
+                    • pomagamy uprościć to, co dziś najbardziej Cię męczy
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+
+
+
+
+      {/* FAQ SECTION */}
+      <motion.section 
+        id="faq"
+        className="pt-10 pb-20 bg-white"
+        initial={false}
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#575761] mb-6">
+              Najczęstsze pytania
+            </h2>
+          </motion.div>
+
+          <motion.div variants={staggerContainer} className="max-w-3xl mx-auto space-y-6 mb-10">
+            {[
+              {
+                q: 'Czy muszę znać AI?',
+                a: 'Nie. Wystarczy, że znasz swój biznes.'
+              },
+              {
+                q: 'Czy to jest dla bardzo małych firm (JDG)?',
+                a: 'Tak. Ten proces jest zaprojektowany właśnie pod jednoosobowe działalności.'
+              },
+              {
+                q: 'Dlaczego konsultacja trwa 3–4 godziny?',
+                a: 'Bo to intensywna praca na Twojej firmie, a nie prezentacja.'
+              },
+              {
+                q: 'Ile kosztuje konsultacja?',
+                a: '1500–2500 zł, w zależności od zakresu pracy.'
+              }
+            ].map((faq, index) => (
+              <motion.div key={index} variants={fadeInUp}>
+                <Card className="border-none shadow-md hover:shadow-xl transition-all bg-gradient-to-br from-white to-[#D8D2E1]/30 hover:from-[#D8D2E1]/20 hover:to-[#D8D2E1]/50 border-l-4 border-l-[#DD614A]">
+                  <CardContent className="p-8">
+                    <h3 className="text-lg font-bold text-[#575761] mb-3">{faq.q}</h3>
+                    <p className="text-[#575761]/80 leading-relaxed">{faq.a}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div variants={fadeInUp} className="text-center">
+            <Button 
+              size="lg"
+              onClick={() => scrollToSection('kontakt')}
+              className="bg-[#DD614A] text-white hover:brightness-95 px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+            >
+              Umów konsultację
+            </Button>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* KONTAKT SECTION */}
+      <motion.section 
+        id="kontakt"
+        className="py-20 bg-gradient-to-br from-[#575761] via-[#648381] to-[#575761] text-white"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div variants={fadeInUp} className="max-w-2xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Umów konsultację
+              </h2>
+              <p className="text-lg text-white/90 mb-4">
+                Jeśli czujesz, że to ma sens — napisz kilka słów o swoim biznesie.
+              </p>
+              <p className="text-base text-white/90">
+                E-mail:{' '}
+                <a href="mailto:info@kbtrener.pl" className="text-[#FFBF46] hover:text-white font-bold underline">
+                  info@kbtrener.pl
+                </a>
+              </p>
+              <p className="text-base text-[#FFBF46] font-bold mt-2">
+                Odpowiem w ciągu 24 godzin.
+              </p>
+            </div>
+
+            <Card className="border-none shadow-2xl bg-white/95 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
+                      Imię
+                    </label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      placeholder="Jak mam się do Ciebie zwracać?"
+                      className="bg-white border-slate-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                      E-mail
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      placeholder="Twój adres e-mail"
+                      className="bg-white border-slate-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
+                      Wiadomość
+                    </label>
+                    <Textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      placeholder="Opowiedz krótko o swoim biznesie i co chciałbyś poprawić..."
+                      className="bg-white border-slate-200 min-h-32"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    <input
+                      id="rodo-consent"
+                      name="rodoConsent"
+                      type="checkbox"
+                      checked={formData.rodoConsent}
+                      onChange={(e) => setFormData({...formData, rodoConsent: e.target.checked})}
+                      required
+                      className="mt-1"
+                    />
+                    <label htmlFor="rodo-consent" className="text-xs text-slate-600">
+                      Wyrażam zgodę na przetwarzanie moich danych osobowych w celu udzielenia odpowiedzi na wiadomość
+                      zgodnie z <a href="https://recepcja.gabinet-spokoj.pl/polityka-prywatnosci" target="_blank" rel="noopener noreferrer" className="underline text-[#DD614A]">Polityką prywatności</a>.
+                    </label>
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full bg-[#DD614A] text-white hover:brightness-95 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+                  >
+                    {isSubmitting ? 'Wysyłam...' : 'Umów konsultację'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* FOOTER */}
+      <footer className="bg-gradient-to-br from-[#575761] via-[#648381] to-[#575761] text-white py-12">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="text-2xl font-bold">Karol Bilecki</div>
+            <p className="text-slate-300">Pomagam jednoosobowym firmom pracować prościej dzięki AI</p>
+            <div className="flex items-center gap-2 text-sm text-slate-400">
+              <Sparkles className="w-4 h-4" />
+              <span>Strona stworzona z pomocą AI</span>
+            </div>
+            <a href="https://recepcja.gabinet-spokoj.pl/polityka-prywatnosci" target="_blank" rel="noopener noreferrer" className="text-slate-300 text-sm underline hover:text-white transition-colors">
+              Polityka prywatności
+            </a>
+            <p className="text-slate-400 text-sm pt-4">
+              © {new Date().getFullYear()} Karol Bilecki. Wszystkie prawa zastrzeżone.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
