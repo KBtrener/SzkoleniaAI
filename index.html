@@ -240,12 +240,12 @@
       }
 
       .about-photo {
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
+        width: 160px;
+        height: 160px;
+        border-radius: 22px;
         object-fit: cover;
-        border: 1px solid rgba(87, 87, 97, 0.15);
-        box-shadow: 0 12px 28px rgba(87, 87, 97, 0.12);
+        border: 1px solid rgba(87, 87, 97, 0.1);
+        box-shadow: 0 16px 36px rgba(87, 87, 97, 0.14);
       }
 
       .faq {
@@ -346,8 +346,29 @@
         }
 
         .about-photo {
-          width: 200px;
-          height: 200px;
+          width: 180px;
+          height: 180px;
+        }
+      }
+
+      @media (min-width: 920px) {
+        .about {
+          grid-template-columns: 320px 1fr;
+          align-items: start;
+        }
+
+        .about-photo-card {
+          position: sticky;
+          top: 1.5rem;
+        }
+
+        .contact-wrapper {
+          grid-template-columns: 1.25fr 0.75fr;
+          align-items: start;
+        }
+
+        .contact-card {
+          max-width: 720px;
         }
       }
 
