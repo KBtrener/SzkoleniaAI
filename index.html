@@ -171,6 +171,10 @@
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       }
 
+      .grid.cols-2 {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
       .card {
         background: #fff;
         padding: 1.5rem;
@@ -231,14 +235,6 @@
         align-items: start;
       }
 
-      .about-photo-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        text-align: center;
-      }
-
       .about-photo {
         width: 160px;
         height: 160px;
@@ -246,6 +242,11 @@
         object-fit: cover;
         border: 1px solid rgba(87, 87, 97, 0.1);
         box-shadow: 0 16px 36px rgba(87, 87, 97, 0.14);
+      }
+
+      .about-photo-top {
+        display: block;
+        margin: 0 auto 1.5rem;
       }
 
       .faq {
@@ -353,22 +354,7 @@
 
       @media (min-width: 920px) {
         .about {
-          grid-template-columns: 320px 1fr;
           align-items: start;
-        }
-
-        .about-photo-card {
-          position: sticky;
-          top: 1.5rem;
-        }
-
-        .contact-wrapper {
-          grid-template-columns: 1.25fr 0.75fr;
-          align-items: start;
-        }
-
-        .contact-card {
-          max-width: 720px;
         }
       }
 
@@ -502,7 +488,7 @@
             <h2>Dla kogo jest ta konsultacja</h2>
             <p>Najlepiej sprawdzi się, jeśli pracujesz 1:1 z klientami i:</p>
           </div>
-          <div class="grid cols-3">
+          <div class="grid cols-2">
             <div class="card">
               <ul class="list">
                 <li>Prowadzisz jednoosobową działalność</li>
@@ -521,9 +507,9 @@
                 <li>Inni freelancerzy usługowi</li>
               </ul>
             </div>
-            <div class="cta-banner">
-              <a class="btn" href="#kontakt">Umów konsultację</a>
-            </div>
+          </div>
+          <div class="cta-banner">
+            <a class="btn" href="#kontakt">Umów konsultację</a>
           </div>
         </div>
       </section>
@@ -549,6 +535,14 @@
           <div class="section-heading">
             <h2>Kim jestem i jak pracuję</h2>
           </div>
+          <img
+            class="about-photo about-photo-top"
+            src="KBtrener.webp"
+            alt="Karol Bilecki"
+            width="320"
+            height="320"
+            decoding="async"
+          />
           <div class="about">
             <div class="card about-photo-card">
               <img
