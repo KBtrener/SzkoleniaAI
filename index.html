@@ -231,6 +231,26 @@
         align-items: start;
       }
 
+      .about-head {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .about-head h3 {
+        margin: 0;
+      }
+
+      .about-photo {
+        width: 104px;
+        height: 104px;
+        border-radius: 16px;
+        object-fit: cover;
+        border: 1px solid rgba(87, 87, 97, 0.15);
+        box-shadow: 0 12px 28px rgba(87, 87, 97, 0.12);
+      }
+
       .faq {
         background: #fff;
         border-radius: 18px;
@@ -326,6 +346,16 @@
 
         .hero {
           padding: 4rem 0;
+        }
+
+        .about-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .about-photo {
+          width: 120px;
+          height: 120px;
         }
       }
 
@@ -508,7 +538,17 @@
           </div>
           <div class="about">
             <div class="card">
-              <h3>Karol Bilecki</h3>
+              <div class="about-head">
+                <img
+                  class="about-photo"
+                  src="KBtrener.webp"
+                  alt="Karol Bilecki"
+                  width="320"
+                  height="320"
+                  decoding="async"
+                />
+                <h3>Karol Bilecki</h3>
+              </div>
               <p>
                 Nazywam się Karol Bilecki. Od ponad 15 lat pracuję na własny rachunek i
                 prowadzę jednoosobowe działalności.
