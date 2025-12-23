@@ -48,6 +48,33 @@
         color: inherit;
       }
 
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: 1rem;
+        top: -3rem;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.6rem 1rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        z-index: 10;
+        transition: top 0.2s ease;
+      }
+
+      .skip-link:focus-visible {
+        top: 1rem;
+      }
+
       .container {
         width: min(1200px, 92%);
         margin: 0 auto;
@@ -102,6 +129,18 @@
 
       section {
         padding: 4.5rem 0;
+      }
+
+      .section-soft {
+        background: rgba(216, 210, 225, 0.35);
+      }
+
+      .section-soft-light {
+        background: rgba(216, 210, 225, 0.25);
+      }
+
+      .section-soft-lightest {
+        background: rgba(216, 210, 225, 0.2);
       }
 
       .section-heading {
@@ -199,8 +238,19 @@
         box-shadow: 0 12px 28px rgba(87, 87, 97, 0.12);
       }
 
-      .faq h4 {
+      .faq summary {
+        list-style: none;
+        cursor: pointer;
+        font-weight: 600;
         margin-bottom: 0.5rem;
+      }
+
+      .faq summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .faq[open] summary {
+        margin-bottom: 0.75rem;
       }
 
       .contact {
@@ -240,6 +290,24 @@
         resize: vertical;
       }
 
+      .text-center {
+        text-align: center;
+      }
+
+      .mt-2 {
+        margin-top: 2rem;
+      }
+
+      .consent-label {
+        display: flex;
+        gap: 0.5rem;
+        align-items: start;
+      }
+
+      .consent-text {
+        font-size: 0.85rem;
+      }
+
       .footer {
         background: linear-gradient(135deg, #575761, #648381, #575761);
         color: #fff;
@@ -260,14 +328,27 @@
           padding: 4rem 0;
         }
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
     </style>
   </head>
   <body>
-    <div class="preheader">
-      Konsultacje AI 1:1 dla jednoosobowych firm pracujących z klientami
-    </div>
+    <a class="skip-link" href="#main">Przejdź do treści</a>
 
-    <main>
+    <header class="preheader">
+      Konsultacje AI 1:1 dla jednoosobowych firm pracujących z klientami
+    </header>
+
+    <main id="main">
       <section class="hero" id="hero">
         <div class="container">
           <h1>
@@ -324,7 +405,7 @@
         </div>
       </section>
 
-      <section style="background: rgba(216, 210, 225, 0.35)">
+      <section class="section-soft">
         <div class="container">
           <div class="section-heading">
             <h2>Co zmienia się po konsultacji</h2>
@@ -366,7 +447,7 @@
               </p>
             </article>
           </div>
-          <p class="muted" style="text-align: center; margin-top: 2rem;">
+          <p class="muted text-center mt-2">
             To system, który ma działać w codziennej pracy — nie w teorii.
           </p>
         </div>
@@ -404,7 +485,7 @@
         </div>
       </section>
 
-      <section style="background: rgba(216, 210, 225, 0.25)">
+      <section class="section-soft-light">
         <div class="container">
           <div class="section-heading">
             <h2>Dlaczego to działa</h2>
@@ -466,30 +547,30 @@
         </div>
       </section>
 
-      <section style="background: rgba(216, 210, 225, 0.2)">
+      <section class="section-soft-lightest">
         <div class="container">
           <div class="section-heading">
             <h2>Najczęstsze pytania</h2>
           </div>
           <div class="grid cols-3">
-            <div class="faq">
-              <h4>Czy muszę znać AI?</h4>
+            <details class="faq">
+              <summary>Czy muszę znać AI?</summary>
               <p class="muted">Nie. Wystarczy, że znasz swój biznes.</p>
-            </div>
-            <div class="faq">
-              <h4>Czy to jest dla bardzo małych firm (JDG)?</h4>
+            </details>
+            <details class="faq">
+              <summary>Czy to jest dla bardzo małych firm (JDG)?</summary>
               <p class="muted">
                 Tak. Ten proces jest zaprojektowany właśnie pod jednoosobowe działalności.
               </p>
-            </div>
-            <div class="faq">
-              <h4>Dlaczego konsultacja trwa 3–4 godziny?</h4>
+            </details>
+            <details class="faq">
+              <summary>Dlaczego konsultacja trwa 3–4 godziny?</summary>
               <p class="muted">Bo to intensywna praca na Twojej firmie, a nie prezentacja.</p>
-            </div>
-            <div class="faq">
-              <h4>Ile kosztuje konsultacja?</h4>
+            </details>
+            <details class="faq">
+              <summary>Ile kosztuje konsultacja?</summary>
               <p class="muted">1500–2500 zł, w zależności od zakresu pracy.</p>
-            </div>
+            </details>
           </div>
           <div class="cta-banner">
             <a class="btn" href="#kontakt">Umów konsultację</a>
@@ -531,9 +612,9 @@
                     required
                   ></textarea>
                 </label>
-                <label style="display: flex; gap: 0.5rem; align-items: start;">
-                  <input type="checkbox" required />
-                  <span class="muted" style="font-size: 0.85rem;">
+                <label class="consent-label">
+                  <input type="checkbox" name="privacy" required />
+                  <span class="muted consent-text">
                     Wyrażam zgodę na przetwarzanie moich danych osobowych w celu udzielenia
                     odpowiedzi na wiadomość zgodnie z
                     <a
