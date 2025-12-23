@@ -231,6 +231,23 @@
         align-items: start;
       }
 
+      .about-photo-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .about-photo {
+        width: 160px;
+        height: 160px;
+        border-radius: 22px;
+        object-fit: cover;
+        border: 1px solid rgba(87, 87, 97, 0.1);
+        box-shadow: 0 16px 36px rgba(87, 87, 97, 0.14);
+      }
+
       .faq {
         background: #fff;
         border-radius: 18px;
@@ -260,7 +277,7 @@
       .contact-wrapper {
         display: grid;
         gap: 2rem;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: 1fr;
         align-items: start;
       }
 
@@ -326,6 +343,32 @@
 
         .hero {
           padding: 4rem 0;
+        }
+
+        .about-photo {
+          width: 180px;
+          height: 180px;
+        }
+      }
+
+      @media (min-width: 920px) {
+        .about {
+          grid-template-columns: 320px 1fr;
+          align-items: start;
+        }
+
+        .about-photo-card {
+          position: sticky;
+          top: 1.5rem;
+        }
+
+        .contact-wrapper {
+          grid-template-columns: 1.25fr 0.75fr;
+          align-items: start;
+        }
+
+        .contact-card {
+          max-width: 720px;
         }
       }
 
@@ -507,8 +550,18 @@
             <h2>Kim jestem i jak pracuję</h2>
           </div>
           <div class="about">
-            <div class="card">
+            <div class="card about-photo-card">
+              <img
+                class="about-photo"
+                src="KBtrener.webp"
+                alt="Karol Bilecki"
+                width="320"
+                height="320"
+                decoding="async"
+              />
               <h3>Karol Bilecki</h3>
+            </div>
+            <div class="card">
               <p>
                 Nazywam się Karol Bilecki. Od ponad 15 lat pracuję na własny rachunek i
                 prowadzę jednoosobowe działalności.
@@ -523,8 +576,6 @@
                 głowy. Dziś używam go jak praktycznego wsparcia w codziennej pracy — do
                 pisania, planowania, analizowania i porządkowania spraw.
               </p>
-            </div>
-            <div class="card">
               <p>
                 Na konsultacjach dzielę się tym doświadczeniem. Pokazuję, jak wykorzystać AI
                 w jednoosobowej firmie, żeby uprościć pracę albo zastąpić zadania, które
