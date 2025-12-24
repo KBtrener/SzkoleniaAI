@@ -662,6 +662,17 @@
                   name="access_key"
                   value="4eb329c8-27ec-4492-be0f-66f39bcb8a8a"
                 />
+                <input
+                  type="hidden"
+                  name="subject"
+                  value="Nowe zgłoszenie – konsultacje AI (KBtrener.pl)"
+                />
+                <input type="hidden" name="from_name" value="KBtrener.pl" />
+                <input
+                  type="hidden"
+                  name="redirect"
+                  value="https://kbtrener.github.io/SzkoleniaAI/?sent=1#kontakt"
+                />
                 <label>
                   Imię
                   <input
@@ -682,12 +693,26 @@
                   />
                 </label>
                 <label>
+                  Czego dotyczy konsultacja?
+                  <input
+                    name="topic"
+                    placeholder="np. automatyzacja, oferta, organizacja pracy, marketing"
+                  />
+                </label>
+                <label>
                   Wiadomość
                   <textarea
                     name="message"
                     placeholder="Opowiedz krótko o swoim biznesie i co chciałbyś poprawić..."
                     required
                   ></textarea>
+                </label>
+                <label>
+                  Preferowany termin (dni/godziny)
+                  <input
+                    name="availability"
+                    placeholder="np. wt/czw 10–14 lub po 18"
+                  />
                 </label>
                 <div class="consent">
                   <input id="consent" name="consent" type="checkbox" required />
@@ -706,6 +731,7 @@
                 </div>
                 <div class="h-captcha" data-captcha="true"></div>
                 <button class="btn" type="submit">Umów konsultację</button>
+                <p id="formStatus" class="muted" aria-live="polite"></p>
               </form>
             </div>
           </div>
@@ -746,6 +772,14 @@
             alert("Zaznacz proszę pole CAPTCHA.");
           }
         });
+      }
+    </script>
+    <script>
+      const formStatus = document.getElementById("formStatus");
+      const params = new URLSearchParams(window.location.search);
+
+      if (formStatus && params.get("sent") === "1") {
+        formStatus.textContent = "Dzięki! Wiadomość wysłana. Odezwiemy się wkrótce.";
       }
     </script>
     <script src="https://web3forms.com/client/script.js" async defer></script>
