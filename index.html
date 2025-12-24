@@ -310,6 +310,7 @@
       }
 
       input,
+      select,
       textarea {
         width: 100%;
         padding: 0.9rem 1rem;
@@ -356,6 +357,46 @@
 
       .footer p {
         color: rgba(255, 255, 255, 0.7);
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 100;
+      }
+
+      .modal.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(87, 87, 97, 0.5);
+      }
+
+      .modal__panel {
+        position: relative;
+        background: #fff;
+        border-radius: 20px;
+        padding: 2rem;
+        width: min(480px, 92%);
+        box-shadow: 0 24px 60px rgba(87, 87, 97, 0.25);
+        z-index: 1;
+        text-align: center;
+      }
+
+      .modal__panel p {
+        margin-bottom: 1.5rem;
       }
 
       @media (max-width: 720px) {
@@ -694,10 +735,13 @@
                 </label>
                 <label>
                   Czego dotyczy konsultacja?
-                  <input
-                    name="topic"
-                    placeholder="np. automatyzacja, oferta, organizacja pracy, marketing"
-                  />
+                  <select name="topic" required>
+                    <option value="" disabled selected>Wybierz…</option>
+                    <option>Automatyzacja / usprawnienie procesów</option>
+                    <option>Marketing / treści / sprzedaż</option>
+                    <option>Organizacja pracy / system działania</option>
+                    <option>Nie wiem – chcę, żebyś doradził</option>
+                  </select>
                 </label>
                 <label>
                   Wiadomość
@@ -755,6 +799,15 @@
       </div>
     </footer>
 
+    <div class="modal" id="sentModal" aria-hidden="true">
+      <div class="modal__backdrop" data-modal-backdrop></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="sentTitle">
+        <h3 id="sentTitle">Wiadomość wysłana ✅</h3>
+        <p class="muted">Dziękuję! Odezwiemy się w ciągu 24 godzin.</p>
+        <button class="btn" type="button" data-modal-close>Wróć do strony</button>
+      </div>
+    </div>
+
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
@@ -781,6 +834,43 @@
       if (formStatus && params.get("sent") === "1") {
         formStatus.textContent = "Dzięki! Wiadomość wysłana. Odezwiemy się wkrótce.";
       }
+    </script>
+    <script>
+      const sentModal = document.getElementById("sentModal");
+      const modalBackdrop = sentModal?.querySelector("[data-modal-backdrop]");
+      const modalCloseButton = sentModal?.querySelector("[data-modal-close]");
+
+      const closeModal = () => {
+        if (!sentModal) {
+          return;
+        }
+        sentModal.classList.remove("is-open");
+        sentModal.setAttribute("aria-hidden", "true");
+      };
+
+      const openModal = () => {
+        if (!sentModal) {
+          return;
+        }
+        sentModal.classList.add("is-open");
+        sentModal.setAttribute("aria-hidden", "false");
+      };
+
+      if (sentModal && params.get("sent") === "1") {
+        openModal();
+        const url = new URL(window.location.href);
+        url.searchParams.delete("sent");
+        history.replaceState({}, "", url);
+      }
+
+      modalBackdrop?.addEventListener("click", closeModal);
+      modalCloseButton?.addEventListener("click", closeModal);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && sentModal?.classList.contains("is-open")) {
+          closeModal();
+        }
+      });
     </script>
     <script src="https://web3forms.com/client/script.js" async defer></script>
   </body>
