@@ -637,16 +637,31 @@
           </div>
           <div class="contact-wrapper">
             <div class="contact-card">
-              <form action="mailto:info@kbtrener.pl" method="post" enctype="text/plain">
+              <form
+                id="contactForm"
+                action="https://api.web3forms.com/submit"
+                method="POST"
+              >
+                <input
+                  type="hidden"
+                  name="access_key"
+                  value="4eb329c8-27ec-4492-be0f-66f39bcb8a8a"
+                />
                 <label>
                   Imię
-                  <input name="name" placeholder="Jak mam się do Ciebie zwracać?" required />
+                  <input
+                    name="name"
+                    autocomplete="name"
+                    placeholder="Jak mam się do Ciebie zwracać?"
+                    required
+                  />
                 </label>
                 <label>
                   E-mail
                   <input
                     type="email"
                     name="email"
+                    autocomplete="email"
                     placeholder="Twój adres e-mail"
                     required
                   />
@@ -660,7 +675,7 @@
                   ></textarea>
                 </label>
                 <label class="consent-label">
-                  <input type="checkbox" name="privacy" required />
+                  <input type="checkbox" name="consent" required />
                   <span class="muted consent-text">
                     Wyrażam zgodę na przetwarzanie moich danych osobowych w celu udzielenia
                     odpowiedzi na wiadomość zgodnie z
@@ -674,6 +689,7 @@
                     .
                   </span>
                 </label>
+                <div class="h-captcha" data-captcha="true"></div>
                 <button class="btn" type="submit">Umów konsultację</button>
               </form>
             </div>
@@ -712,5 +728,22 @@
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
+    <script>
+      const contactForm = document.getElementById("contactForm");
+
+      if (contactForm) {
+        contactForm.addEventListener("submit", (event) => {
+          const captchaResponse = contactForm.querySelector(
+            'textarea[name="h-captcha-response"]'
+          );
+
+          if (!captchaResponse || !captchaResponse.value.trim()) {
+            event.preventDefault();
+            alert("Zaznacz proszę pole CAPTCHA.");
+          }
+        });
+      }
+    </script>
+    <script src="https://web3forms.com/client/script.js" async defer></script>
   </body>
 </html>
