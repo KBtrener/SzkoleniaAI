@@ -321,14 +321,20 @@
         margin-top: 2rem;
       }
 
-      .consent-label {
-        display: flex;
-        gap: 0.5rem;
+      .consent {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        gap: 0.75rem;
         align-items: start;
       }
 
-      .consent-text {
-        font-size: 0.85rem;
+      .consent input {
+        margin-top: 0.2rem;
+      }
+
+      .consent label {
+        margin: 0;
+        line-height: 1.35;
       }
 
       .footer {
@@ -632,7 +638,10 @@
             <p>
               Jeśli czujesz, że to ma sens — napisz kilka słów o swoim biznesie.
             </p>
-            <p class="muted">E-mail: <a href="mailto:info@kbtrener.pl">info@kbtrener.pl</a></p>
+            <p class="muted">
+              E-mail:
+              <a href="mailto:karol.kbtrener@gmail.com">karol.kbtrener@gmail.com</a>
+            </p>
             <p class="muted">Odpowiem w ciągu 24 godzin.</p>
           </div>
           <div class="contact-wrapper">
@@ -674,9 +683,9 @@
                     required
                   ></textarea>
                 </label>
-                <label class="consent-label">
-                  <input type="checkbox" name="consent" required />
-                  <span class="muted consent-text">
+                <div class="consent">
+                  <input id="consent" name="consent" type="checkbox" required />
+                  <label for="consent" class="muted">
                     Wyrażam zgodę na przetwarzanie moich danych osobowych w celu udzielenia
                     odpowiedzi na wiadomość zgodnie z
                     <a
@@ -687,22 +696,11 @@
                       Polityką prywatności
                     </a>
                     .
-                  </span>
-                </label>
+                  </label>
+                </div>
                 <div class="h-captcha" data-captcha="true"></div>
                 <button class="btn" type="submit">Umów konsultację</button>
               </form>
-            </div>
-            <div class="card">
-              <h3>Jak wygląda kontakt?</h3>
-              <p class="muted">
-                Po wysłaniu wiadomości odezwę się mailowo z propozycją terminu i krótkim
-                opisem kolejnych kroków.
-              </p>
-              <p class="muted">
-                Jeśli wolisz napisać bezpośrednio, możesz skorzystać z adresu
-                <strong> info@kbtrener.pl</strong>.
-              </p>
             </div>
           </div>
         </div>
