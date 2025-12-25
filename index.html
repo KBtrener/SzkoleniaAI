@@ -733,6 +733,20 @@
                     required
                   />
                 </label>
+                <label for="phone">
+                  Numer telefonu
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  name="phone"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  pattern="[0-9+()\\- ]{7,20}"
+                  title="Podaj numer telefonu (7–20 znaków: cyfry, spacje, +, -, nawiasy)."
+                  maxlength="20"
+                  placeholder="Twój numer telefonu"
+                />
                 <label>
                   Czego dotyczy konsultacja?
                   <select name="topic" required>
